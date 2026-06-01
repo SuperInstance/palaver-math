@@ -1,0 +1,24 @@
+{
+  "name": "palaver-math",
+  "version": "1.0.0",
+  "description": "Mathematics of consensus-building inspired by the West African Palaver tradition",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test dist/test/*.test.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "consensus",
+    "palaver",
+    "dialogue",
+    "coalition",
+    "voting"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "typescript": "^5.9.3"
+  }
+}
