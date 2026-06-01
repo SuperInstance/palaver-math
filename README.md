@@ -1,8 +1,14 @@
 # palaver-math
 
-> Mathematics of consensus-building, inspired by the West African Palaver tradition.
+> Dialogue and consensus mathematics for JavaScript — iterative convergence, coalition formation, and dialogue trees.
 
-**Palaver** is the tradition of extended community dialogue — structured conversation that builds consensus through deliberation. This package implements the mathematical foundations of that process.
+## What This Does
+
+`palaver-math` models group consensus as iterative convergence, inspired by West African palaver tradition. Participants hold position vectors, vote on proposals, and drift toward agreement. It detects convergence, finds coalitions, predicts consensus, and builds dialogue trees. Use it for multi-agent systems, collaborative filtering, or opinion dynamics.
+
+## The Cultural Root
+
+See the Python version (`palaver-math` on PyPI) for the full cultural background. A palaver is community dialogue under a tree — no voting, just iteration until everyone agrees.
 
 ## Install
 
@@ -10,78 +16,54 @@
 npm install palaver-math
 ```
 
-## Usage
+## Quick Start
 
 ```typescript
 import {
-  computeCenter, consensusDistance, influenceWeightedCenter,
-  PalaverSession, convergenceRate, predictConsensus,
+  PalaverSession, computeCenter, consensusDistance,
+  convergenceRate, isConverging,
   findCoalitions, coalitionStrength,
   buildDialogueTree, findConsensusPath,
-} from 'palaver-math';
+} from "palaver-math";
 
-// Define participants with positions and influence
-const participants = [
-  { id: 'elder', position: [7, 3], influence: 5 },
-  { id: 'youth', position: [3, 8], influence: 2 },
-  { id: 'merchant', position: [5, 5], influence: 3 },
-];
+const session = new PalaverSession({ threshold: 0.5, stepSize: 0.1 });
+session.addParticipant([1.0, 0.0]);
+session.addParticipant([0.0, 1.0]);
+session.addParticipant([0.5, 0.5]);
 
-// Compute consensus
-const center = computeCenter(participants);        // unweighted centroid
-const weighted = influenceWeightedCenter(participants);  // influence-weighted
-const spread = consensusDistance(participants);     // how far apart they are
+const proposal = session.addProposal([0.4, 0.4]);
+session.vote(0, proposal);
 
-// Run a Palaver session
-const session = new PalaverSession();
-participants.forEach(p => session.addParticipant(p));
-session.addProposal('compromise', [5, 5], 'elder');
-session.vote('elder', 'compromise', 1.0);
-session.vote('youth', 'compromise', 0.6);
 const result = session.computeConsensus();
-
-// Find coalitions
-const coalitions = findCoalitions(participants, 4.0);
-const strength = coalitionStrength(coalitions[0]);
-
-// Build dialogue trees and find consensus paths
-const tree = buildDialogueTree([
-  { statement: 'We need to decide.', speaker: 'elder' },
-  { statement: 'I agree to the compromise.', speaker: 'youth', parentId: 0, isConsensus: true },
-]);
-const path = findConsensusPath(tree);
+console.log(result.consensusReached, result.center, result.rounds);
 ```
 
-## API
+## API Reference
 
-### Types
-- **Participant** `{ id, position: number[], influence: number }`
-- **Topic** `{ id, dimensions: string[], idealPoint: number[] }`
-- **Proposal** `{ id, position: number[], proposerId, votes: Map }`
-- **ConsensusResult** `{ position: number[], confidence: number, rounds: number }`
-- **DialogueNode** `{ statement, speaker, responses: DialogueNode[], isConsensus? }`
+### `PalaverSession`
+- `addParticipant(position: number[]) → number`
+- `addProposal(position: number[]) → number`
+- `vote(participantIdx, proposalIdx) → void`
+- `computeConsensus() → { consensusReached, center, distance, rounds, positions }`
+- `participants() → Participant[]`
+- `history() → number[][][]`
 
-### Consensus Functions
-- `computeCenter(participants)` → centroid
-- `consensusDistance(participants)` → average distance from center
-- `influenceWeightedCenter(participants)` → influence-weighted centroid
-
-### PalaverSession
-- `addParticipant(p)`, `addProposal(id, position, proposerId)`
-- `vote(participantId, proposalId, weight)`
-- `computeConsensus()` → `{ position, confidence, rounds }`
+### Consensus
+- `computeCenter(participants) → number[]`
+- `consensusDistance(participants) → number`
+- `influenceWeightedCenter(participants, weights?) → number[]`
 
 ### Convergence
-- `convergenceRate(sessionHistory)` → fraction of steps that converge
-- `predictConsensus(session, maxRounds)` → predicted final position
+- `convergenceRate(history) → number`
+- `isConverging(history) → boolean`
 
 ### Coalitions
-- `findCoalitions(participants, threshold)` → groups of nearby participants
-- `coalitionStrength(coalition)` → combined influence × cohesion
+- `findCoalitions(participants, threshold) → number[][]`
+- `coalitionStrength(coalition) → number`
 
-### Dialogue Tree
-- `buildDialogueTree(statements)` → tree structure
-- `findConsensusPath(tree)` → shortest BFS path to consensus node
+### Dialogue
+- `buildDialogueTree(statements) → DialogueNode`
+- `findConsensusPath(tree) → DialogueNode[]`
 
 ## License
 
