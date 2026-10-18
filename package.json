@@ -11,8 +11,9 @@
   ],
   "scripts": {
     "build": "tsc",
+    "guard": "node guard/check-publishable.mjs .",
     "test": "tsc -p tsconfig.test.json && node --test .test-dist/test/*.test.js",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build && npm run guard"
   },
   "keywords": [
     "consensus",
