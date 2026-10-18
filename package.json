@@ -1,6 +1,6 @@
 {
   "name": "palaver-math",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Mathematics of consensus-building inspired by the West African Palaver tradition",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
