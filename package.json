@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "node --test dist/test/*.test.js",
+    "test": "tsc -p tsconfig.test.json && node --test dist-test/test/*.test.js",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -28,5 +28,10 @@
   "homepage": "https://github.com/SuperInstance/palaver-math#readme",
   "bugs": {
     "url": "https://github.com/SuperInstance/palaver-math/issues"
-  }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
 }
