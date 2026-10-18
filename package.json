@@ -1,12 +1,17 @@
 {
   "name": "palaver-math",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Mathematics of consensus-building inspired by the West African Palaver tradition",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
-    "test": "node --test dist/test/*.test.js",
+    "test": "tsc -p tsconfig.test.json && node --test .test-dist/test/*.test.js",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
