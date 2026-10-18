@@ -17,4 +17,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - run: npm ci
+      - run: npm run build
+      - name: Declared entry points must exist in the build output
+        run: |
+          node -e "const p=require('./package.json'),fs=require('fs');const e=[p.main,p.types].filter(Boolean);const miss=e.filter(f=>!fs.existsSync(f));if(miss.length){console.error('DECLARED BUT NOT BUILT: '+miss.join(', '));process.exit(1)}console.log('entry points present: '+e.join(', '))"
+      - run: npm run guard
+      - run: npm run guard
       - run: npm test --if-present
